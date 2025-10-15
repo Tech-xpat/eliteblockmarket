@@ -97,7 +97,7 @@ const contactMethods = [
   {
     icon: "📞",
     title: "Call Us",
-    details: "+1 (800) 123-4567",
+    details: "+27 71 540 3179",
     description: "Mon-Fri, 9AM-6PM EST",
   },
   {

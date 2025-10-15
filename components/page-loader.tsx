@@ -4,20 +4,34 @@ import { useEffect, useState } from "react"
 
 export function PageLoader() {
   const [isLoading, setIsLoading] = useState(true)
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 95) return prev
+        return prev + 5
+      })
+    }, 350)
+
     const timer = setTimeout(() => {
-      setIsLoading(false)
+      setProgress(100)
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 300)
     }, 7000)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      clearInterval(progressInterval)
+    }
   }, [])
 
   if (!isLoading) return null
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950">
-      <div className="relative">
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950">
+      <div className="relative mb-8">
         {/* Outer spinning ring */}
         <div className="w-20 h-20 border-4 border-slate-700 border-t-orange-500 rounded-full animate-spin"></div>
 
@@ -45,8 +59,17 @@ export function PageLoader() {
         </div>
       </div>
 
-      {/* Loading text */}
-      <div className="absolute bottom-1/3 text-white text-lg font-semibold animate-pulse">Loading...</div>
+      {/* Loading text with progress */}
+      <div className="text-center">
+        <div className="text-white text-lg font-semibold mb-4">Loading UltimateStckTrader...</div>
+        <div className="w-64 h-2 bg-slate-800 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-orange-500 to-yellow-500 transition-all duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <div className="text-gray-400 text-sm mt-2">{progress}%</div>
+      </div>
     </div>
   )
 }

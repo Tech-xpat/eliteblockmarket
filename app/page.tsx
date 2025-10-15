@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { TypingAnimation } from "@/components/typing-animation"
 import { PageLoader } from "@/components/page-loader"
 import Link from "next/link"
@@ -107,198 +107,177 @@ const marketData = [
 ]
 
 const TradingViewWidget = () => {
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"
-    script.async = true
-    script.innerHTML = JSON.stringify({
-      symbols: [
-        { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
-        { proName: "FOREXCOM:NSXUSD", title: "US 100" },
-        { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
-        { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-        { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
+  const widgetHtml = `
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {
+      "symbols": [
+        {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
+        {"proName": "FOREXCOM:NSXUSD", "title": "US 100"},
+        {"proName": "FX_IDC:EURUSD", "title": "EUR/USD"},
+        {"proName": "FX:GBPUSD", "title": "GBP/USD"},
+        {"proName": "FX:USDJPY", "title": "USD/JPY"},
+        {"proName": "BITSTAMP:BTCUSD", "title": "Bitcoin"},
+        {"proName": "BITSTAMP:ETHUSD", "title": "Ethereum"}
       ],
-      showSymbolLogo: true,
-      colorTheme: "dark",
-      isTransparent: false,
-      displayMode: "adaptive",
-      locale: "en",
-    })
-    document.getElementById("tradingview-widget")?.appendChild(script)
-  }, [])
+      "showSymbolLogo": true,
+      "colorTheme": "dark",
+      "isTransparent": false,
+      "displayMode": "adaptive",
+      "locale": "en"
+    }
+    </script>
+  `
 
   return (
-    <div className="tradingview-widget-container" id="tradingview-widget">
-      <div className="tradingview-widget-container__widget"></div>
-    </div>
+    <div
+      className="tradingview-widget-container w-full"
+      style={{ minHeight: "60px" }}
+      dangerouslySetInnerHTML={{ __html: widgetHtml }}
+    />
   )
 }
 
 const TradingViewMarketOverview = () => {
-  useEffect(() => {
-    const container = document.getElementById("tradingview-market-overview")
-    if (!container) return
-
-    // Clear previous content
-    container.innerHTML = ""
-
-    const script = document.createElement("script")
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
-    script.async = true
-    script.innerHTML = JSON.stringify({
-      colorTheme: "dark",
-      dateRange: "12M",
-      showChart: true,
-      locale: "en",
-      width: "100%",
-      height: "100%",
-      largeChartUrl: "",
-      isTransparent: false,
-      showSymbolLogo: true,
-      showFloatingTooltip: false,
-      plotLineColorGrowing: "rgba(41, 98, 255, 1)",
-      plotLineColorFalling: "rgba(41, 98, 255, 1)",
-      gridLineColor: "rgba(240, 243, 250, 0)",
-      scaleFontColor: "rgba(106, 109, 120, 1)",
-      belowLineFillColorGrowing: "rgba(41, 98, 255, 0.12)",
-      belowLineFillColorFalling: "rgba(41, 98, 255, 0.12)",
-      belowLineFillColorGrowingBottom: "rgba(41, 98, 255, 0)",
-      belowLineFillColorFallingBottom: "rgba(41, 98, 255, 0)",
-      symbolActiveColor: "rgba(41, 98, 255, 0.12)",
-      tabs: [
+  const widgetHtml = `
+    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+    {
+      "colorTheme": "dark",
+      "dateRange": "12M",
+      "showChart": true,
+      "locale": "en",
+      "width": "100%",
+      "height": "100%",
+      "largeChartUrl": "",
+      "isTransparent": false,
+      "showSymbolLogo": true,
+      "showFloatingTooltip": false,
+      "plotLineColorGrowing": "rgba(251, 146, 60, 1)",
+      "plotLineColorFalling": "rgba(239, 68, 68, 1)",
+      "gridLineColor": "rgba(240, 243, 250, 0)",
+      "scaleFontColor": "rgba(156, 163, 175, 1)",
+      "belowLineFillColorGrowing": "rgba(251, 146, 60, 0.12)",
+      "belowLineFillColorFalling": "rgba(239, 68, 68, 0.12)",
+      "belowLineFillColorGrowingBottom": "rgba(251, 146, 60, 0)",
+      "belowLineFillColorFallingBottom": "rgba(239, 68, 68, 0)",
+      "symbolActiveColor": "rgba(251, 146, 60, 0.12)",
+      "tabs": [
         {
-          title: "Indices",
-          symbols: [
-            { s: "FOREXCOM:SPXUSD", d: "S&P 500" },
-            { s: "FOREXCOM:NSXUSD", d: "US 100" },
-            { s: "FOREXCOM:DJI", d: "Dow 30" },
-            { s: "INDEX:NKY", d: "Nikkei 225" },
-            { s: "INDEX:DEU40", d: "DAX Index" },
-            { s: "FOREXCOM:UKXGBP", d: "UK 100" },
-          ],
-          originalTitle: "Indices",
+          "title": "Indices",
+          "symbols": [
+            {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
+            {"s": "FOREXCOM:NSXUSD", "d": "US 100"},
+            {"s": "FOREXCOM:DJI", "d": "Dow 30"},
+            {"s": "INDEX:NKY", "d": "Nikkei 225"},
+            {"s": "INDEX:DEU40", "d": "DAX Index"},
+            {"s": "FOREXCOM:UKXGBP", "d": "UK 100"}
+          ]
         },
         {
-          title: "Forex",
-          symbols: [
-            { s: "FX:EURUSD", d: "EUR to USD" },
-            { s: "FX:GBPUSD", d: "GBP to USD" },
-            { s: "FX:USDJPY", d: "USD to JPY" },
-            { s: "FX:USDCHF", d: "USD to CHF" },
-            { s: "FX:AUDUSD", d: "AUD to USD" },
-            { s: "FX:USDCAD", d: "USD to CAD" },
-          ],
-          originalTitle: "Forex",
+          "title": "Forex",
+          "symbols": [
+            {"s": "FX:EURUSD", "d": "EUR/USD"},
+            {"s": "FX:GBPUSD", "d": "GBP/USD"},
+            {"s": "FX:USDJPY", "d": "USD/JPY"},
+            {"s": "FX:USDCHF", "d": "USD/CHF"},
+            {"s": "FX:AUDUSD", "d": "AUD/USD"},
+            {"s": "FX:USDCAD", "d": "USD/CAD"}
+          ]
         },
         {
-          title: "Crypto",
-          symbols: [
-            { s: "BINANCE:BTCUSDT", d: "Bitcoin" },
-            { s: "BINANCE:ETHUSDT", d: "Ethereum" },
-            { s: "BINANCE:BNBUSDT", d: "BNB" },
-            { s: "BINANCE:SOLUSDT", d: "Solana" },
-            { s: "BINANCE:XRPUSDT", d: "XRP" },
-            { s: "BINANCE:ADAUSDT", d: "Cardano" },
-          ],
-        },
-      ],
-    })
-    container.appendChild(script)
-  }, [])
+          "title": "Crypto",
+          "symbols": [
+            {"s": "BINANCE:BTCUSDT", "d": "Bitcoin"},
+            {"s": "BINANCE:ETHUSDT", "d": "Ethereum"},
+            {"s": "BINANCE:BNBUSDT", "d": "BNB"},
+            {"s": "BINANCE:SOLUSDT", "d": "Solana"},
+            {"s": "BINANCE:XRPUSDT", "d": "XRP"},
+            {"s": "BINANCE:ADAUSDT", "d": "Cardano"}
+          ]
+        }
+      ]
+    }
+    </script>
+  `
 
   return (
-    <div className="tradingview-widget-container" style={{ height: "500px", width: "100%" }}>
-      <div id="tradingview-market-overview" style={{ height: "100%", width: "100%" }}></div>
+    <div className="tradingview-widget-container w-full" style={{ height: "500px" }}>
+      <div dangerouslySetInnerHTML={{ __html: widgetHtml }} style={{ height: "100%", width: "100%" }} />
     </div>
   )
 }
 
 const TradingViewHotlists = () => {
-  useEffect(() => {
-    const container = document.getElementById("tradingview-hotlists")
-    if (!container) return
-
-    // Clear previous content
-    container.innerHTML = ""
-
-    const script = document.createElement("script")
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js"
-    script.async = true
-    script.innerHTML = JSON.stringify({
-      width: "100%",
-      height: "100%",
-      defaultColumn: "overview",
-      defaultScreen: "general",
-      market: "crypto",
-      showToolbar: true,
-      colorTheme: "dark",
-      locale: "en",
-      isTransparent: false,
-    })
-    container.appendChild(script)
-  }, [])
+  const widgetHtml = `
+    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+    {
+      "width": "100%",
+      "height": "100%",
+      "defaultColumn": "overview",
+      "defaultScreen": "general",
+      "market": "crypto",
+      "showToolbar": true,
+      "colorTheme": "dark",
+      "locale": "en",
+      "isTransparent": false
+    }
+    </script>
+  `
 
   return (
-    <div className="tradingview-widget-container" style={{ height: "600px", width: "100%" }}>
-      <div id="tradingview-hotlists" style={{ height: "100%", width: "100%" }}></div>
+    <div className="tradingview-widget-container w-full" style={{ height: "600px" }}>
+      <div dangerouslySetInnerHTML={{ __html: widgetHtml }} style={{ height: "100%", width: "100%" }} />
     </div>
   )
 }
 
 const TradingViewTimeline = () => {
-  useEffect(() => {
-    const container = document.getElementById("tradingview-timeline")
-    if (!container) return
-
-    // Clear previous content
-    container.innerHTML = ""
-
-    const script = document.createElement("script")
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-timeline.js"
-    script.async = true
-    script.innerHTML = JSON.stringify({
-      feedMode: "all_symbols",
-      colorTheme: "dark",
-      isTransparent: false,
-      displayMode: "regular",
-      width: "100%",
-      height: "100%",
-      locale: "en",
-    })
-    container.appendChild(script)
-  }, [])
+  const widgetHtml = `
+    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+    {
+      "feedMode": "all_symbols",
+      "colorTheme": "dark",
+      "isTransparent": false,
+      "displayMode": "regular",
+      "width": "100%",
+      "height": "100%",
+      "locale": "en"
+    }
+    </script>
+  `
 
   return (
-    <div className="tradingview-widget-container" style={{ height: "600px", width: "100%" }}>
-      <div id="tradingview-timeline" style={{ height: "100%", width: "100%" }}></div>
+    <div className="tradingview-widget-container w-full" style={{ height: "600px" }}>
+      <div dangerouslySetInnerHTML={{ __html: widgetHtml }} style={{ height: "100%", width: "100%" }} />
     </div>
   )
 }
 
 const TradingViewChart = () => {
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
-    script.async = true
-    script.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: "NASDAQ:AAPL",
-      interval: "D",
-      timezone: "Etc/UTC",
-      theme: "dark",
-      style: "1",
-      locale: "en",
-      enable_publishing: false,
-      allow_symbol_change: true,
-      support_host: "https://www.tradingview.com",
-    })
-    document.getElementById("tradingview-chart")?.appendChild(script)
-  }, [])
+  const widgetHtml = `
+    <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+    {
+      "autosize": true,
+      "symbol": "BINANCE:BTCUSDT",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "dark",
+      "style": "1",
+      "locale": "en",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "support_host": "https://www.tradingview.com"
+    }
+    </script>
+  `
 
   return (
-    <div className="tradingview-widget-container" style={{ height: "500px", width: "100%" }}>
-      <div id="tradingview-chart" style={{ height: "calc(100% - 32px)", width: "100%" }}></div>
+    <div className="tradingview-widget-container w-full" style={{ height: "500px" }}>
+      <div dangerouslySetInnerHTML={{ __html: widgetHtml }} style={{ height: "100%", width: "100%" }} />
     </div>
   )
 }
