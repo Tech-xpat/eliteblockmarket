@@ -104,7 +104,7 @@ const supportOptions = [
   {
     icon: "📞",
     title: "Phone Support",
-    description: "Call us at +27 71 540 3179",
+    description: "Speak directly with our team",
     availability: "Mon-Fri, 9AM-6PM EST",
     action: "Call Now",
   },
