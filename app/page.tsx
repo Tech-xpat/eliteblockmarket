@@ -535,7 +535,7 @@ const Header = () => {
             <li className="w-full md:w-auto">
               {/* TODO: Add get started URL here */}
               <a
-                href="https://ultimatestcktrader.online"
+                href="https://ultimatestcktrader.xyz"
                 className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold py-2 px-6 rounded-full block text-center hover:shadow-lg transition-all"
               >
                 Get Started
@@ -593,7 +593,7 @@ const Hero = () => (
           Login
         </a>
         <a
-          href="https://ultimatestcktrader.online"
+          href="https://ultimatestcktrader.xyz"
           className="border-2 border-orange-500 text-white font-bold py-3 px-8 rounded-full w-full sm:w-auto hover:bg-orange-500/10 transition-all text-center"
         >
           Open Account
@@ -630,7 +630,7 @@ const PlatformUI = () => (
 
       <div className="mt-12 text-center">
         <a
-          href="https://ultimatestcktrader.online"
+          href="https://ultimatestcktrader.xyz"
           className="inline-flex items-center bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold py-4 px-10 rounded-full hover:shadow-lg hover:scale-105 transition-all text-lg"
         >
           <span>Get Started Now</span>
@@ -1354,22 +1354,22 @@ const Footer = () => (
           <h4 className="text-white font-semibold mb-4">Support</h4>
           <ul className="space-y-2">
             <li>
-              <a href="https://ultimatestcktrader.online" className="hover:text-orange-500 transition-colors">
+              <a href="https://ultimatestcktrader.xyz" className="hover:text-orange-500 transition-colors">
                 Help Center
               </a>
             </li>
             <li>
-              <a href="https://ultimatestcktrader.online" className="hover:text-orange-500 transition-colors">
+              <a href="https://ultimatestcktrader.xyz" className="hover:text-orange-500 transition-colors">
                 Trading Guide
               </a>
             </li>
             <li>
-              <a href="https://ultimatestcktrader.online" className="hover:text-orange-500 transition-colors">
+              <a href="https://ultimatestcktrader.xyz" className="hover:text-orange-500 transition-colors">
                 API Docs
               </a>
             </li>
             <li>
-              <a href="https://ultimatestcktrader.online" className="hover:text-orange-500 transition-colors">
+              <a href="https://ultimatestcktrader.xyz" className="hover:text-orange-500 transition-colors">
                 Status
               </a>
             </li>
