@@ -1,303 +1,337 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { AnimatedBackground } from "@/components/animated-background"
-import { HolographicPhone } from "@/components/holographic-phone"
-
-interface CryptoMarket {
-  symbol: string
-  name: string
-  price: number
-  change: number
-  isPositive: boolean
-}
-
-const LiveMarketData: CryptoMarket[] = [
-  { symbol: "BTC", name: "Bitcoin", price: 67100.12, change: 2.45, isPositive: true },
-  { symbol: "ETH", name: "Ethereum", price: 3512.45, change: -1.23, isPositive: false },
-  { symbol: "SOL", name: "Solana", price: 168.80, change: 5.12, isPositive: true },
-  { symbol: "XRP", name: "Ripple", price: 0.5214, change: 3.87, isPositive: true },
-]
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3,
-    },
-  },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: "easeOut",
-    },
-  },
-}
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function Home() {
-  const [marketData, setMarketData] = useState<CryptoMarket[]>(LiveMarketData)
-  const [isScrolled, setIsScrolled] = useState(false)
-
-  // Simulate live market updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMarketData((prev) =>
-        prev.map((coin) => ({
-          ...coin,
-          price: coin.price * (1 + (Math.random() - 0.5) * 0.01),
-          change: coin.change + (Math.random() - 0.5) * 0.5,
-          isPositive: coin.change >= 0,
-        }))
-      )
-    }, 3000)
-
-    return () => clearInterval(interval)
-  }, [])
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 100)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <AnimatedBackground />
-
+    <main className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-background/80 backdrop-blur-md border-b border-primary/20" : ""}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-2xl font-bold"
-          >
-            <span className="text-primary neon-glow">ELITE</span>
-            <span className="text-foreground">BlockMarket</span>
-          </motion.div>
-
-          <div className="hidden md:flex gap-8 items-center">
-            {["Home", "Markets", "Trade", "About"].map((item) => (
-              <Link key={item} href={item === "Home" ? "/" : `/${item.toLowerCase()}`} className="text-sm hover:text-primary transition">
-                {item}
-              </Link>
-            ))}
+      <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-md">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
+          <div className="text-2xl font-bold">
+            <span className="text-primary">Elite</span>BlockMarket
           </div>
-
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 neon-box-glow">
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="/markets" className="text-sm hover:text-primary transition-colors">
+              Markets
+            </Link>
+            <Link href="/trade" className="text-sm hover:text-primary transition-colors">
+              Trade
+            </Link>
+            <Link href="/about" className="text-sm hover:text-primary transition-colors">
+              About
+            </Link>
+          </div>
+          <button className="bg-primary text-primary-foreground px-6 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
             Launch App
-          </Button>
+          </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left content */}
-          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
-            <motion.div variants={itemVariants} className="space-y-4">
-              <p className="text-sm text-primary uppercase tracking-widest font-bold">Keep Your Money Safe!</p>
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-foreground">Best crypto</span>
-                <br />
-                <span className="text-primary neon-glow">investing platform</span>
-                <br />
-                <span className="text-muted">for your future.</span>
-              </h1>
-            </motion.div>
-
-            <motion.p variants={itemVariants} className="text-base text-muted leading-relaxed">
-              EliteBlockMarket unites and secures a growing ecosystem of specialized blockchain applications. Trade, invest, and manage your digital assets with confidence.
-            </motion.p>
-
-            <motion.div variants={itemVariants} className="flex gap-4">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/50 border-2 border-background flex items-center justify-center text-xs font-bold"
-                  >
-                    {i}
-                  </div>
-                ))}
-              </div>
-              <div className="text-sm">
-                <p className="font-bold">168K+</p>
-                <p className="text-muted">Realtime Users</p>
-              </div>
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-base font-bold neon-box-glow">
-                Explore Now →
-              </Button>
-              <Button variant="outline" className="border-primary/50 hover:bg-primary/10 px-8 py-6">
-                Learn More
-              </Button>
-            </motion.div>
-
-            {/* Info boxes */}
-            <motion.div variants={itemVariants} className="flex gap-6 text-sm border-t border-primary/20 pt-6">
-              <div>
-                <p className="text-primary font-bold">$4,528 USD</p>
-                <p className="text-muted text-xs">Polkadot unites and secures</p>
-              </div>
-              <div>
-                <p className="text-primary font-bold">↑ 48.66%</p>
-                <p className="text-muted text-xs">Average ROI</p>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right - Holographic Phone */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="h-full flex items-center justify-center"
-          >
-            <HolographicPhone />
-          </motion.div>
+      {/* Hero Section with Tech Node Background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-card/10 to-background">
+        {/* Animated background grid */}
+        <div className="absolute inset-0 opacity-10">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(212, 175, 55, 0.2)" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
         </div>
-      </section>
 
-      {/* Live Markets Ticker */}
-      <section className="py-16 px-4 border-t border-primary/20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="mb-12"
-          >
-            <h2 className="text-3xl font-bold mb-2">
-              <span className="text-foreground">Trusted </span>
-              <span className="text-primary neon-glow">platform</span>
-            </h2>
-            <p className="text-muted">Real-time market data with live price updates</p>
-          </motion.div>
+        {/* Animated nodes */}
+        <canvas id="nodeCanvas" className="absolute inset-0 w-full h-full opacity-30" />
 
-          {/* Market Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {marketData.map((coin, index) => (
-              <motion.div
-                key={coin.symbol}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/50 z-5" />
+
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 py-20 max-w-5xl">
+          <div className="text-center space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            {/* Main Headline */}
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+                <span className="block text-foreground">Follow The Path of</span>
+                <span className="block bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent font-black">
+                  Elite Trading Legends
+                </span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Trade crypto, forex, and commodities with real-time data. Access institutional-grade tools with a community of professional traders.
+              </p>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+              <Link
+                href="/trade"
+                className="bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
               >
-                <Card className="bg-card/50 border-primary/20 hover:border-primary/50 transition-all hover:neon-box-glow cursor-pointer group">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <p className="font-bold text-lg">{coin.symbol}</p>
-                        <p className="text-xs text-muted">{coin.name}</p>
-                      </div>
-                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center font-bold text-sm ${coin.isPositive ? "bg-primary/20 text-primary" : "bg-destructive/20 text-destructive"}`}>
-                        {coin.isPositive ? "↑" : "↓"}
-                      </div>
-                    </div>
+                Start Trading Now
+              </Link>
+              <Link
+                href="/markets"
+                className="border border-primary text-primary px-8 py-4 rounded-lg font-semibold hover:bg-primary/10 transition-all duration-300"
+              >
+                View All Markets
+              </Link>
+            </div>
 
-                    <p className="text-2xl font-bold mb-2">${coin.price.toFixed(2)}</p>
-                    <motion.p
-                      animate={{
-                        color: coin.isPositive ? ["#B0FF00", "#00ff88", "#B0FF00"] : ["#ff0050", "#ff6b9d", "#ff0050"],
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="text-sm font-bold"
-                    >
-                      {coin.isPositive ? "+" : ""}{coin.change.toFixed(2)}%
-                    </motion.p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 md:gap-8 pt-12 border-t border-border/30">
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-primary">50K+</div>
+                <div className="text-sm text-muted-foreground mt-2">Active Traders</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-primary">$2.5B+</div>
+                <div className="text-sm text-muted-foreground mt-2">Daily Volume</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-primary">24/7</div>
+                <div className="text-sm text-muted-foreground mt-2">Market Access</div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+          <svg
+            className="w-6 h-6 text-primary/60"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 border-t border-primary/20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">
-              Your <span className="text-primary neon-glow">trusted</span> partner of cryptocurrency.
+      <section className="relative py-20 md:py-32 border-t border-border/50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Why Choose <span className="text-primary">Elite</span>BlockMarket?
             </h2>
-          </motion.div>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Professional trading platform with institutional-grade features and retail accessibility
+            </p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { title: "Service for Any Level of Expertise", description: "Whether you&apos;re a beginner or pro trader, EliteBlockMarket adapts to your needs with intuitive tools and advanced features." },
-              { title: "Industry Best Practices", description: "We implement cutting-edge security protocols and follow compliance standards to protect your assets and ensure regulatory adherence.", highlight: true },
-              { title: "Protected by Insurance", description: "Your funds are safeguarded with comprehensive insurance coverage, giving you peace of mind on every transaction." },
-            ].map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-              >
-                <Card className={`h-full transition-all hover:neon-box-glow ${feature.highlight ? "bg-primary/20 border-primary/50" : "bg-card/50 border-primary/20"}`}>
-                  <CardContent className="p-8">
-                    <h3 className={`text-xl font-bold mb-4 ${feature.highlight ? "text-primary" : ""}`}>{feature.title}</h3>
-                    <p className="text-muted text-sm leading-relaxed">{feature.description}</p>
-                    {feature.highlight && (
-                      <Link href="/learn" className="inline-block mt-4 text-primary hover:text-primary/80 font-bold text-sm">
-                        Learn More →
-                      </Link>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="p-8 border border-border/50 rounded-xl hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 bg-card/30 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-primary mb-4">⚡</div>
+              <h3 className="text-xl font-bold mb-3">Lightning Fast</h3>
+              <p className="text-muted-foreground">
+                Real-time market data from CoinGecko and premium forex feeds with sub-second latency.
+              </p>
+            </div>
+
+            <div className="p-8 border border-border/50 rounded-xl hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 bg-card/30 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-primary mb-4">🛡️</div>
+              <h3 className="text-xl font-bold mb-3">Secure & Regulated</h3>
+              <p className="text-muted-foreground">
+                Bank-level security with multi-signature wallets and compliance with international regulations.
+              </p>
+            </div>
+
+            <div className="p-8 border border-border/50 rounded-xl hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 bg-card/30 backdrop-blur-sm">
+              <div className="text-4xl font-bold text-primary mb-4">📊</div>
+              <h3 className="text-xl font-bold mb-3">Advanced Analytics</h3>
+              <p className="text-muted-foreground">
+                Professional charting tools with technical indicators and AI-powered market insights.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Market News Section */}
+      <section className="relative py-20 md:py-32 bg-card/20 border-t border-border/50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">
+            Live Market <span className="text-primary">News</span>
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="p-6 border border-border/50 rounded-lg bg-background/40 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl">📈</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-2">Bitcoin ETF Approval Drives Adoption</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Institutional investors increase allocation to Bitcoin following recent regulatory approvals globally.
+                  </p>
+                  <p className="text-xs text-primary mt-3">Updated 2 hours ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border border-border/50 rounded-lg bg-background/40 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl">💱</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-2">EUR/USD Volatile on Central Bank Signals</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Forex markets react to latest ECB and Federal Reserve policy hints. Watch key resistance levels.
+                  </p>
+                  <p className="text-xs text-primary mt-3">Updated 1 hour ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border border-border/50 rounded-lg bg-background/40 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl">⛽</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-2">Oil Prices Hit 6-Month High on Geopolitical Tensions</h3>
+                  <p className="text-sm text-muted-foreground">
+                    WTI crude crosses $85 per barrel as supply concerns mount in key producing regions.
+                  </p>
+                  <p className="text-xs text-primary mt-3">Updated 3 hours ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border border-border/50 rounded-lg bg-background/40 hover:border-primary/50 transition-all duration-300">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl">🏆</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-2">Solana Ecosystem Growth Accelerates</h3>
+                  <p className="text-sm text-muted-foreground">
+                    New partnerships and reduced fees boost trading volume on Solana network by 35% this month.
+                  </p>
+                  <p className="text-xs text-primary mt-3">Updated 4 hours ago</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 border-t border-primary/20">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-4xl mx-auto text-center"
-        >
-          <h2 className="text-4xl font-bold mb-6">
-            Ready to start trading?
+      <section className="relative py-20 border-t border-border/50">
+        <div className="container mx-auto px-4 max-w-4xl text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Join Elite Traders?
           </h2>
-          <p className="text-muted mb-8 text-lg">Join thousands of traders on EliteBlockMarket today</p>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-12 py-8 text-lg font-bold neon-box-glow">
-            Get Started Now
-          </Button>
-        </motion.div>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Access professional trading tools, real-time market data, and join a community of successful traders.
+          </p>
+          <Link
+            href="/trade"
+            className="inline-block bg-primary text-primary-foreground px-10 py-4 rounded-lg font-bold text-lg hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
+          >
+            Get Started Today
+          </Link>
+        </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-primary/20 py-12 px-4 text-center text-muted text-sm">
-        <div className="max-w-7xl mx-auto">
+      <footer className="border-t border-border/50 py-12 px-4">
+        <div className="container mx-auto max-w-6xl text-center text-muted-foreground text-sm">
           <p className="mb-4">
-            <span className="text-primary font-bold">EliteBlockMarket</span> - Your Gateway to Next-Generation Crypto Trading
+            <span className="text-primary font-bold">EliteBlockMarket</span> - Professional Trading Platform
           </p>
           <p>© 2026 EliteBlockMarket. All rights reserved.</p>
         </div>
       </footer>
-    </div>
-  )
+
+      {/* Canvas animation for tech nodes */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          const canvas = document.getElementById('nodeCanvas');
+          if (canvas && canvas.getContext) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const nodes = [];
+            for (let i = 0; i < 15; i++) {
+              nodes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.3,
+                radius: 3 + Math.random() * 2,
+              });
+            }
+            
+            function animate() {
+              ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              
+              nodes.forEach((node) => {
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                if (node.x - node.radius < 0 || node.x + node.radius > canvas.width) {
+                  node.vx *= -0.8;
+                  node.x = Math.max(node.radius, Math.min(canvas.width - node.radius, node.x));
+                }
+                if (node.y - node.radius < 0 || node.y + node.radius > canvas.height) {
+                  node.vy *= -0.8;
+                  node.y = Math.max(node.radius, Math.min(canvas.height - node.radius, node.y));
+                }
+                
+                node.vx *= 0.999;
+                node.vy *= 0.999;
+                
+                ctx.fillStyle = 'rgba(212, 175, 55, 0.4)';
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                ctx.fill();
+              });
+              
+              for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                  const dx = nodes[i].x - nodes[j].x;
+                  const dy = nodes[i].y - nodes[j].y;
+                  const distance = Math.sqrt(dx * dx + dy * dy);
+                  
+                  if (distance < 200) {
+                    ctx.strokeStyle = 'rgba(212, 175, 55, 0.15)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.stroke();
+                  }
+                }
+              }
+              
+              requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            window.addEventListener('resize', () => {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+            });
+          }
+        `
+      }} />
+    </main>
+  );
 }

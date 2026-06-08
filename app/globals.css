@@ -4,31 +4,31 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Neon Crypto Branding: Dark background with lime-green accents */
+  /* Professional Elite Trading: Dark background with gold accents */
   --background: #0a0a0a;
-  --foreground: #f5f5f5;
+  --foreground: #f0f0f0;
   --card: #1a1a1a;
-  --card-foreground: #f5f5f5;
+  --card-foreground: #f0f0f0;
   --popover: #1a1a1a;
-  --popover-foreground: #f5f5f5;
-  --primary: #B0FF00;
+  --popover-foreground: #f0f0f0;
+  --primary: #D4AF37;
   --primary-foreground: #0a0a0a;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #B0FF00;
-  --muted: #333333;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #D4AF37;
+  --muted: #3a3a3a;
   --muted-foreground: #888888;
-  --accent: #B0FF00;
+  --accent: #D4AF37;
   --accent-foreground: #0a0a0a;
-  --destructive: #ff0050;
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: #333333;
   --input: #1a1a1a;
-  --ring: #B0FF00;
-  --chart-1: #B0FF00;
-  --chart-2: #00ff88;
-  --chart-3: #00d4ff;
-  --chart-4: #ff0050;
-  --chart-5: #ffa500;
+  --ring: #D4AF37;
+  --chart-1: #D4AF37;
+  --chart-2: #10b981;
+  --chart-3: #3b82f6;
+  --chart-4: #ef4444;
+  --chart-5: #f59e0b;
   --radius: 0.625rem;
   --sidebar: #1a1a1a;
   --sidebar-foreground: #f5f5f5;
@@ -97,13 +97,89 @@
   }
 }
 
-/* Neon glow effect */
+/* Scroll animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scroll-triggered animation classes */
+.scroll-fade-in {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.scroll-slide-left {
+  opacity: 0;
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.scroll-slide-right {
+  opacity: 0;
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.scroll-scale-in {
+  opacity: 0;
+  animation: scaleIn 0.8s ease-out forwards;
+}
+
+/* Gold glow effect */
 .neon-glow {
-  text-shadow: 0 0 10px rgba(176, 255, 0, 0.8), 0 0 20px rgba(176, 255, 0, 0.5), 0 0 30px rgba(176, 255, 0, 0.3);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 0 0 20px rgba(212, 175, 55, 0.5), 0 0 30px rgba(212, 175, 55, 0.3);
 }
 
 .neon-box-glow {
-  box-shadow: 0 0 20px rgba(176, 255, 0, 0.3), inset 0 0 20px rgba(176, 255, 0, 0.1);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), inset 0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+/* Subtle gold accent for text */
+.gold-text {
+  color: #D4AF37;
+}
+
+.gold-glow-text {
+  color: #D4AF37;
+  text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 }
 
 /* Grid pattern for hero background */
