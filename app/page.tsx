@@ -48,10 +48,19 @@ export default function Home() {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-card/20 -z-10" />
 
-        {/* Animated background elements */}
-        <div className="absolute inset-0 -z-5">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        {/* 3D Animated background elements with crypto symbols */}
+        <div className="absolute inset-0 -z-5 overflow-hidden">
+          {/* Floating crypto symbols with 3D animation */}
+          <div className="absolute top-20 left-10 text-7xl font-bold text-primary/15 animate-crypto-float-1">₿</div>
+          <div className="absolute top-40 right-20 text-6xl font-bold text-primary/10 animate-crypto-float-2">Ξ</div>
+          <div className="absolute bottom-32 left-1/4 text-5xl font-bold text-primary/12 animate-crypto-float-3">◆</div>
+          <div className="absolute top-1/2 right-10 text-6xl font-bold text-primary/10 animate-crypto-float-4">₹</div>
+          <div className="absolute bottom-20 right-1/3 text-5xl font-bold text-primary/15 animate-crypto-float-5">₽</div>
+          
+          {/* Glowing orbs with parallax effect */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float-slow" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float-slow-delayed" />
+          <div className="absolute top-1/3 right-1/3 w-80 h-80 bg-primary/8 rounded-full blur-2xl animate-float-slower" />
         </div>
 
         {/* Content */}
@@ -313,6 +322,188 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Advanced 3D Crypto Animations */}
+      <style>{`
+        @keyframes crypto-float-1 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) rotateZ(0deg) scale(1);
+            opacity: 0.15;
+          }
+          25% {
+            transform: translateY(-40px) translateX(30px) rotateZ(15deg) scale(1.1);
+            opacity: 0.2;
+          }
+          50% {
+            transform: translateY(-80px) translateX(-20px) rotateZ(30deg) scale(0.9);
+            opacity: 0.25;
+          }
+          75% {
+            transform: translateY(-40px) translateX(40px) rotateZ(15deg) scale(1.05);
+            opacity: 0.2;
+          }
+        }
+
+        @keyframes crypto-float-2 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) rotateZ(0deg) scale(1);
+            opacity: 0.1;
+          }
+          25% {
+            transform: translateY(-50px) translateX(-35px) rotateZ(-20deg) scale(1.15);
+            opacity: 0.15;
+          }
+          50% {
+            transform: translateY(-100px) translateX(25px) rotateZ(-40deg) scale(0.85);
+            opacity: 0.2;
+          }
+          75% {
+            transform: translateY(-50px) translateX(-40px) rotateZ(-20deg) scale(1.1);
+            opacity: 0.15;
+          }
+        }
+
+        @keyframes crypto-float-3 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) rotateZ(0deg) scale(1);
+            opacity: 0.12;
+          }
+          25% {
+            transform: translateY(-35px) translateX(25px) rotateZ(25deg) scale(1.08);
+            opacity: 0.18;
+          }
+          50% {
+            transform: translateY(-70px) translateX(-30px) rotateZ(50deg) scale(0.92);
+            opacity: 0.22;
+          }
+          75% {
+            transform: translateY(-35px) translateX(30px) rotateZ(25deg) scale(1.05);
+            opacity: 0.18;
+          }
+        }
+
+        @keyframes crypto-float-4 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) rotateZ(0deg) scale(1);
+            opacity: 0.1;
+          }
+          25% {
+            transform: translateY(-45px) translateX(-30px) rotateZ(-15deg) scale(1.12);
+            opacity: 0.16;
+          }
+          50% {
+            transform: translateY(-90px) translateX(35px) rotateZ(-30deg) scale(0.88);
+            opacity: 0.21;
+          }
+          75% {
+            transform: translateY(-45px) translateX(-35px) rotateZ(-15deg) scale(1.08);
+            opacity: 0.16;
+          }
+        }
+
+        @keyframes crypto-float-5 {
+          0%, 100% {
+            transform: translateY(0) translateX(0) rotateZ(0deg) scale(1);
+            opacity: 0.15;
+          }
+          25% {
+            transform: translateY(-40px) translateX(35px) rotateZ(20deg) scale(1.1);
+            opacity: 0.2;
+          }
+          50% {
+            transform: translateY(-75px) translateX(-25px) rotateZ(40deg) scale(0.9);
+            opacity: 0.25;
+          }
+          75% {
+            transform: translateY(-40px) translateX(40px) rotateZ(20deg) scale(1.05);
+            opacity: 0.2;
+          }
+        }
+
+        @keyframes float-slow {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.1;
+          }
+          50% {
+            transform: translate(50px, -50px) scale(1.05);
+            opacity: 0.15;
+          }
+        }
+
+        @keyframes float-slow-delayed {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.05;
+          }
+          50% {
+            transform: translate(-50px, 50px) scale(0.95);
+            opacity: 0.1;
+          }
+        }
+
+        @keyframes float-slower {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.08;
+          }
+          50% {
+            transform: translate(30px, -30px) scale(1.02);
+            opacity: 0.12;
+          }
+        }
+
+        .animate-crypto-float-1 {
+          animation: crypto-float-1 8s ease-in-out infinite;
+        }
+
+        .animate-crypto-float-2 {
+          animation: crypto-float-2 10s ease-in-out infinite;
+          animation-delay: 0.5s;
+        }
+
+        .animate-crypto-float-3 {
+          animation: crypto-float-3 9s ease-in-out infinite;
+          animation-delay: 1s;
+        }
+
+        .animate-crypto-float-4 {
+          animation: crypto-float-4 11s ease-in-out infinite;
+          animation-delay: 1.5s;
+        }
+
+        .animate-crypto-float-5 {
+          animation: crypto-float-5 10.5s ease-in-out infinite;
+          animation-delay: 2s;
+        }
+
+        .animate-float-slow {
+          animation: float-slow 15s ease-in-out infinite;
+        }
+
+        .animate-float-slow-delayed {
+          animation: float-slow-delayed 18s ease-in-out infinite;
+          animation-delay: 2s;
+        }
+
+        .animate-float-slower {
+          animation: float-slower 20s ease-in-out infinite;
+          animation-delay: 1s;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-crypto-float-1,
+          .animate-crypto-float-2,
+          .animate-crypto-float-3,
+          .animate-crypto-float-4,
+          .animate-crypto-float-5,
+          .animate-float-slow,
+          .animate-float-slow-delayed,
+          .animate-float-slower {
+            animation: none;
+          }
+        }
+      `}</style>
     </main>
   );
 }
