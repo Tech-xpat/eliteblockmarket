@@ -1,288 +1,349 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { AnimatedBackground } from "@/components/animated-background"
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  return (
-    <header className="bg-slate-900/95 backdrop-blur-md p-4 sticky top-0 z-50 border-b border-slate-800">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center">
-          <img
-            src="https://i.ibb.co/pBSBnW9y/Whats-App-Image-2025-10-10-at-8-45-37-AM-1-removebg-preview-1.png"
-            alt="UltimateStckTrader Logo"
-            className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
-          />
-        </Link>
-
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden text-white p-2 hover:bg-slate-800 rounded-lg transition-colors"
-          aria-label="Toggle menu"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            {isMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-            )}
-          </svg>
-        </button>
-
-        <nav
-          className={`absolute md:relative top-full left-0 md:top-0 md:left-auto w-full md:w-auto bg-slate-900 md:bg-transparent transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0 md:max-h-full md:opacity-100"
-          } overflow-hidden md:overflow-visible border-b md:border-b-0 border-slate-800`}
-        >
-          <ul className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 p-4 md:p-0">
-            <li>
-              <Link href="/markets" className="text-gray-300 hover:text-white transition-colors block py-2">
-                Markets
-              </Link>
-            </li>
-            <li>
-              <Link href="/trade" className="text-white font-semibold transition-colors block py-2">
-                Trade
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="text-gray-300 hover:text-white transition-colors block py-2">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href="/support" className="text-gray-300 hover:text-white transition-colors block py-2">
-                Support
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="text-gray-300 hover:text-white transition-colors block py-2">
-                Contact
-              </Link>
-            </li>
-            <li className="w-full md:w-auto">
-              <a
-                href="https://ultimatestcktrader.online"
-                className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold py-2 px-6 rounded-full block text-center hover:shadow-lg transition-all"
-              >
-                Get Started
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-  )
-}
-
-const TradingViewChart = () => {
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
-    script.async = true
-    script.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: "NASDAQ:AAPL",
-      interval: "D",
-      timezone: "Etc/UTC",
-      theme: "dark",
-      style: "1",
-      locale: "en",
-      enable_publishing: false,
-      allow_symbol_change: true,
-      support_host: "https://www.tradingview.com",
-    })
-    document.getElementById("tradingview-chart")?.appendChild(script)
-  }, [])
-
-  return (
-    <div className="tradingview-widget-container" style={{ height: "600px", width: "100%" }}>
-      <div id="tradingview-chart" style={{ height: "calc(100% - 32px)", width: "100%" }}></div>
-    </div>
-  )
-}
-
-const tradingFeatures = [
-  {
-    icon: "📊",
-    title: "Advanced Charting",
-    description: "Professional-grade charts with 100+ technical indicators and drawing tools",
-  },
-  {
-    icon: "⚡",
-    title: "One-Click Trading",
-    description: "Execute trades instantly with our streamlined order entry system",
-  },
-  {
-    icon: "🔔",
-    title: "Price Alerts",
-    description: "Set custom alerts and never miss a trading opportunity",
-  },
-  {
-    icon: "📱",
-    title: "Mobile Trading",
-    description: "Trade anywhere with our powerful mobile apps for iOS and Android",
-  },
-  {
-    icon: "🤖",
-    title: "Automated Trading",
-    description: "Use expert advisors and trading bots to automate your strategies",
-  },
-  {
-    icon: "📈",
-    title: "Real-Time Data",
-    description: "Access live market data and news feeds from global exchanges",
-  },
+const TradingPairs = [
+  { symbol: "BTC/USDT", name: "Bitcoin", currentPrice: 67100.12, change: 2.45 },
+  { symbol: "ETH/USDT", name: "Ethereum", currentPrice: 3512.45, change: -1.23 },
+  { symbol: "SOL/USDT", name: "Solana", currentPrice: 168.80, change: 5.12 },
+  { symbol: "XRP/USDT", name: "Ripple", currentPrice: 0.5214, change: 3.87 },
 ]
 
 export default function TradePage() {
+  const [selectedPair, setSelectedPair] = useState(TradingPairs[0])
+  const [orderType, setOrderType] = useState<"buy" | "sell">("buy")
+  const [amount, setAmount] = useState("")
+  const [price, setPrice] = useState(selectedPair.currentPrice.toString())
+
+  const [orders, setOrders] = useState<Array<{ id: number; type: string; pair: string; amount: string; price: string; date: string }>>([
+    {
+      id: 1,
+      type: "BUY",
+      pair: "BTC/USDT",
+      amount: "0.5",
+      price: "67,100",
+      date: "2 hours ago",
+    },
+    {
+      id: 2,
+      type: "SELL",
+      pair: "ETH/USDT",
+      amount: "5.2",
+      price: "3,512",
+      date: "5 hours ago",
+    },
+  ])
+
+  useEffect(() => {
+    setPrice(selectedPair.currentPrice.toString())
+  }, [selectedPair])
+
+  const handlePlaceOrder = () => {
+    if (amount && price) {
+      const newOrder = {
+        id: orders.length + 1,
+        type: orderType.toUpperCase(),
+        pair: selectedPair.symbol,
+        amount: amount,
+        price: price,
+        date: "just now",
+      }
+      setOrders([newOrder, ...orders])
+      setAmount("")
+    }
+  }
+
   return (
-    <div className="bg-slate-900 min-h-screen">
-      <Header />
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <AnimatedBackground />
 
-      <main>
-        {/* Hero Section */}
-        <section className="bg-gradient-to-b from-slate-900 to-slate-800 py-20 px-4">
-          <div className="container mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Start Trading Today</h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Experience professional-grade trading with our advanced platform. Access global markets, powerful tools,
-              and lightning-fast execution.
-            </p>
-            <div className="max-w-4xl mx-auto mb-8">
-              <img
-                src="/images/design-mode/Gr-fico-financeiro-do-gr-fico-de-a-es-do-mercado-de-a-es-caixa-de-negocia-o-de-investimento.jpg"
-                alt="Trading Platform"
-                className="rounded-lg shadow-2xl w-full h-[300px] md:h-[400px] object-cover"
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold py-3 px-8 rounded-full text-lg">
-                Open Live Account
-              </Button>
-              <Button className="border-2 border-orange-500 text-white hover:bg-orange-500/10 font-bold py-3 px-8 rounded-full text-lg bg-transparent">
-                Try Demo Account
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Live Trading Chart */}
-        <section className="py-20 px-4 bg-slate-900">
-          <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-white text-center mb-4">Live Trading Platform</h2>
-            <p className="text-gray-400 text-center mb-12">Professional charting powered by TradingView - Try it now</p>
-            <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <TradingViewChart />
-            </div>
-          </div>
-        </section>
-
-        {/* Trading Features */}
-        <section className="py-20 px-4 bg-slate-800">
-          <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-white text-center mb-4">Powerful Trading Tools</h2>
-            <p className="text-gray-400 text-center mb-12">Everything you need to trade like a professional</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {tradingFeatures.map((feature, index) => (
-                <Card key={index} className="bg-slate-900 border-slate-700 hover:border-orange-500 transition-colors">
-                  <CardContent className="p-6">
-                    <div className="text-5xl mb-4">{feature.icon}</div>
-                    <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                    <p className="text-gray-400">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Account Types */}
-        <section className="py-20 px-4 bg-slate-900">
-          <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-white text-center mb-12">Choose Your Account Type</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <Card className="bg-slate-800 border-slate-700">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">Demo Account</h3>
-                  <p className="text-gray-400 mb-6">
-                    Practice trading with virtual funds. Perfect for beginners to learn without risk.
-                  </p>
-                  <ul className="space-y-2 mb-6 text-gray-300">
-                    <li>✓ $100,000 virtual funds</li>
-                    <li>✓ Full platform access</li>
-                    <li>✓ Real-time market data</li>
-                    <li>✓ No time limit</li>
-                  </ul>
-                  <Button className="w-full bg-slate-700 hover:bg-slate-600">Open Demo Account</Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-slate-800 border-2 border-orange-500 relative">
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                  Most Popular
-                </div>
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">Standard Account</h3>
-                  <p className="text-gray-400 mb-6">Start trading with as little as $100. Ideal for most traders.</p>
-                  <ul className="space-y-2 mb-6 text-gray-300">
-                    <li>✓ Minimum deposit: $100</li>
-                    <li>✓ Competitive spreads</li>
-                    <li>✓ All trading instruments</li>
-                    <li>✓ 24/7 support</li>
-                  </ul>
-                  <Button className="w-full bg-orange-500 hover:bg-orange-600">Open Standard Account</Button>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-slate-800 border-slate-700">
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">Pro Account</h3>
-                  <p className="text-gray-400 mb-6">Advanced features for professional traders with higher volumes.</p>
-                  <ul className="space-y-2 mb-6 text-gray-300">
-                    <li>✓ Minimum deposit: $10,000</li>
-                    <li>✓ Tightest spreads</li>
-                    <li>✓ Priority execution</li>
-                    <li>✓ Dedicated manager</li>
-                  </ul>
-                  <Button className="w-full bg-slate-700 hover:bg-slate-600">Open Pro Account</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="bg-gradient-to-r from-orange-500 to-yellow-500 py-16 px-4">
-          <div className="container mx-auto text-center">
-            <h2 className="text-4xl font-bold text-white mb-4">Ready to Trade?</h2>
-            <p className="text-white/90 text-lg mb-8">Join thousands of traders worldwide</p>
-            <Button
-              onClick={() => (window.location.href = "https://ultimatestcktrader.online")}
-              className="bg-white text-orange-500 hover:bg-gray-100 font-bold py-3 px-8 rounded-full text-lg"
-            >
-              Start Trading Now
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-primary/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <Link href="/" className="text-2xl font-bold">
+            <span className="text-primary neon-glow">ELITE</span>
+            <span className="text-foreground">BlockMarket</span>
+          </Link>
+          <div className="flex gap-4 items-center">
+            <Link href="/markets" className="text-sm hover:text-primary transition">
+              Markets
+            </Link>
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Account
             </Button>
           </div>
-        </section>
-      </main>
+        </div>
+      </nav>
+
+      {/* Main Trading Layout */}
+      <div className="pt-20 px-4 pb-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Panel - Price Chart */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-2 space-y-6"
+          >
+            {/* Trading Pair Selector */}
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {TradingPairs.map((pair) => (
+                <button
+                  key={pair.symbol}
+                  onClick={() => setSelectedPair(pair)}
+                  className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+                    selectedPair.symbol === pair.symbol
+                      ? "bg-primary text-primary-foreground neon-box-glow"
+                      : "bg-card border border-primary/30 hover:border-primary/50"
+                  }`}
+                >
+                  {pair.symbol}
+                </button>
+              ))}
+            </div>
+
+            {/* Price Display Card */}
+            <Card className="bg-card/50 border-primary/20 neon-box-glow">
+              <CardContent className="p-8">
+                <motion.div
+                  key={selectedPair.symbol}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <p className="text-muted text-sm mb-2">{selectedPair.name}</p>
+                  <motion.h2
+                    animate={{ scale: [1, 1.02, 1] }}
+                    transition={{ duration: 0.3 }}
+                    className="text-5xl font-bold mb-4"
+                  >
+                    ${selectedPair.currentPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </motion.h2>
+
+                  <motion.div
+                    animate={{
+                      color: selectedPair.change >= 0 ? ["#B0FF00", "#00ff88", "#B0FF00"] : ["#ff0050", "#ff6b9d", "#ff0050"],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="text-2xl font-bold"
+                  >
+                    {selectedPair.change >= 0 ? "+" : ""}{selectedPair.change.toFixed(2)}% Today
+                  </motion.div>
+                </motion.div>
+
+                {/* Chart placeholder with animated waves */}
+                <div className="mt-8 h-64 relative">
+                  <svg className="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="chart-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#B0FF00" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="#B0FF00" stopOpacity="0.01" />
+                      </linearGradient>
+                    </defs>
+                    {/* Animated chart line */}
+                    <polyline
+                      points="0,150 20,130 40,120 60,100 80,110 100,90 120,85 140,75 160,70 180,60 200,50 220,55 240,45 260,40 280,35 300,40 320,30 340,25 360,20 380,25 400,15"
+                      fill="url(#chart-gradient)"
+                      stroke="#B0FF00"
+                      strokeWidth="2"
+                    />
+                    <polyline
+                      points="0,150 20,130 40,120 60,100 80,110 100,90 120,85 140,75 160,70 180,60 200,50 220,55 240,45 260,40 280,35 300,40 320,30 340,25 360,20 380,25 400,15"
+                      fill="none"
+                      stroke="#B0FF00"
+                      strokeWidth="2"
+                      opacity="0.5"
+                      style={{
+                        animation: "dash 20s linear infinite",
+                      }}
+                    />
+                  </svg>
+                </div>
+
+                {/* Time periods */}
+                <div className="flex gap-2 mt-6">
+                  {["1H", "4H", "1D", "1W", "1M"].map((period) => (
+                    <button
+                      key={period}
+                      className="px-3 py-1 text-xs rounded bg-primary/10 hover:bg-primary/20 transition text-primary"
+                    >
+                      {period}
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Market Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "24h High", value: "$68,500" },
+                { label: "24h Low", value: "$65,800" },
+                { label: "Market Cap", value: "$1.32T" },
+                { label: "Volume", value: "$28.5B" },
+              ].map((stat, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                >
+                  <Card className="bg-card/50 border-primary/20">
+                    <CardContent className="p-4">
+                      <p className="text-muted text-xs mb-2">{stat.label}</p>
+                      <p className="text-xl font-bold text-primary">{stat.value}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right Panel - Order Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="space-y-6"
+          >
+            {/* Order Type Selector */}
+            <div className="flex gap-2 bg-card/50 border border-primary/20 rounded-lg p-1">
+              {(["buy", "sell"] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setOrderType(type)}
+                  className={`flex-1 py-2 rounded transition-all ${
+                    orderType === type
+                      ? type === "buy"
+                        ? "bg-primary/50 text-primary"
+                        : "bg-destructive/50 text-destructive"
+                      : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            {/* Trading Form */}
+            <Card className="bg-card/50 border-primary/20">
+              <CardContent className="p-6 space-y-6">
+                {/* Pair display */}
+                <div>
+                  <p className="text-muted text-sm mb-2">Trading Pair</p>
+                  <p className="text-lg font-bold">{selectedPair.symbol}</p>
+                </div>
+
+                {/* Amount Input */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    Amount ({selectedPair.symbol.split("/")[0]})
+                  </label>
+                  <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="Enter amount"
+                    className="w-full px-4 py-3 bg-card border border-primary/30 rounded-lg text-foreground placeholder-muted focus:outline-none focus:border-primary transition"
+                  />
+                </div>
+
+                {/* Price Input */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Price (USDT)</label>
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="Enter price"
+                    className="w-full px-4 py-3 bg-card border border-primary/30 rounded-lg text-foreground placeholder-muted focus:outline-none focus:border-primary transition"
+                  />
+                </div>
+
+                {/* Total */}
+                <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
+                  <p className="text-muted text-sm mb-2">Total</p>
+                  <p className="text-2xl font-bold text-primary">
+                    ${(parseFloat(amount || "0") * parseFloat(price || "0")).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                </div>
+
+                {/* Place Order Button */}
+                <button
+                  onClick={handlePlaceOrder}
+                  className={`w-full py-3 rounded-lg font-bold transition-all ${
+                    orderType === "buy"
+                      ? "bg-primary/80 hover:bg-primary text-primary-foreground"
+                      : "bg-destructive/80 hover:bg-destructive text-white"
+                  }`}
+                >
+                  {orderType.charAt(0).toUpperCase() + orderType.slice(1)} {selectedPair.symbol}
+                </button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Recent Orders */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mt-12 max-w-7xl mx-auto"
+        >
+          <h2 className="text-2xl font-bold mb-6">Recent Orders</h2>
+          <Card className="bg-card/50 border-primary/20">
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {orders.map((order) => (
+                  <motion.div
+                    key={order.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center justify-between p-4 bg-card/50 rounded-lg border border-primary/20 hover:border-primary/50 transition"
+                  >
+                    <div className="flex-1">
+                      <p className="font-semibold">{order.pair}</p>
+                      <p className="text-sm text-muted">{order.date}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`font-bold ${order.type === "BUY" ? "text-primary" : "text-destructive"}`}>
+                        {order.type}
+                      </p>
+                      <p className="text-sm text-muted">
+                        {order.amount} @ ${order.price}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-gray-400 py-8 px-4">
-        <div className="container mx-auto text-center">
-          <p>© 2025 UltimateStckTrader. All rights reserved.</p>
+      <footer className="border-t border-primary/20 py-12 px-4 text-center text-muted text-sm">
+        <div className="max-w-7xl mx-auto">
+          <p className="mb-4">
+            <span className="text-primary font-bold">EliteBlockMarket</span> - Advanced Trading Platform
+          </p>
+          <p>© 2026 EliteBlockMarket. All rights reserved.</p>
         </div>
       </footer>
+
+      <style>{`
+        @keyframes dash {
+          to {
+            stroke-dashoffset: 1000;
+          }
+        }
+      `}</style>
     </div>
   )
-              }
+}

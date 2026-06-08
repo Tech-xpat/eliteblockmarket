@@ -13,11 +13,12 @@ const Header = () => {
     <header className="bg-slate-900/95 backdrop-blur-md p-4 sticky top-0 z-50 border-b border-slate-800">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="flex items-center">
-          <img
-            src="https://i.ibb.co/pBSBnW9y/Whats-App-Image-2025-10-10-at-8-45-37-AM-1-removebg-preview-1.png"
-            alt="UltimateStckTrader Logo"
-            className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 object-contain"
-          />
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold">
+              <span className="text-primary">ELITE</span>
+              <span className="text-foreground">BlockMarket</span>
+            </span>
+          </div>
         </Link>
 
         <button
