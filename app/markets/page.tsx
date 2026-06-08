@@ -1,11 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { AnimatedBackground } from "@/components/animated-background"
+import { TradingViewMarketOverview, TradingViewCryptoHeatmap, TradingViewEconomicCalendar } from "@/components/tradingview-widgets"
 
 interface MarketCoin {
   symbol: string

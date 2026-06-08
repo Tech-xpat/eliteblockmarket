@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { TradingViewAdvancedChart, TradingViewMarketOverview, TradingViewEconomicCalendar } from '@/components/tradingview-widgets';
 
 interface TradingPair {
   symbol: string;
@@ -145,16 +146,14 @@ export default function TradePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left - Market Data */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Chart Area */}
-            <div className="border border-border/50 rounded-lg p-6 bg-card/30">
-              <h2 className="text-xl font-bold mb-4">Market Chart</h2>
-              <div className="w-full h-96 bg-background/50 rounded-lg flex items-center justify-center text-muted-foreground">
-                <div className="text-center">
-                  <div className="text-4xl mb-2">📊</div>
-                  <p>Interactive chart placeholder</p>
-                  <p className="text-sm mt-2">Connect TradingView or your preferred charting library</p>
-                </div>
+            {/* Chart Area - TradingView */}
+            <div className="border border-border/50 rounded-lg overflow-hidden bg-card/30">
+              <div className="p-4 border-b border-border/50">
+                <h2 className="text-xl font-bold">Live Market Chart</h2>
               </div>
+              {selectedPair && (
+                <TradingViewAdvancedChart symbol={selectedPair.symbol === 'BTC' ? 'BITSTAMP:BTCUSD' : selectedPair.symbol === 'ETH' ? 'BITSTAMP:ETHUSD' : 'BITSTAMP:BTCUSD'} />
+              )}
             </div>
 
             {/* Trading Pairs */}

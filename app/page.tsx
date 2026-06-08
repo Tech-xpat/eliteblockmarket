@@ -1,56 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
-interface CryptoData {
-  symbol: string;
-  name: string;
-  current_price: number;
-  price_change_percentage_24h: number;
-  market_cap_rank: number;
-}
+import { TradingViewTicker, TradingViewMarketOverview } from '@/components/tradingview-widgets';
 
 export default function Home() {
-  const router = useRouter();
-  const [cryptoData, setCryptoData] = useState<CryptoData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Fetch real crypto data from CoinGecko
-  useEffect(() => {
-    const fetchCryptoData = async () => {
-      try {
-        const response = await fetch(
-          'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=8&sparkline=false&price_change_percentage=24h'
-        );
-        const data = await response.json();
-        setCryptoData(data);
-      } catch (error) {
-        console.log('[v0] Error fetching crypto data:', error);
-        // Fallback data
-        setCryptoData([
-          { symbol: 'btc', name: 'Bitcoin', current_price: 67500, price_change_percentage_24h: 2.45, market_cap_rank: 1 },
-          { symbol: 'eth', name: 'Ethereum', current_price: 3520, price_change_percentage_24h: -1.23, market_cap_rank: 2 },
-          { symbol: 'bnb', name: 'BNB', current_price: 612, price_change_percentage_24h: 1.87, market_cap_rank: 3 },
-          { symbol: 'xrp', name: 'XRP', current_price: 0.52, price_change_percentage_24h: 3.21, market_cap_rank: 4 },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCryptoData();
-    const interval = setInterval(fetchCryptoData, 60000); // Refresh every minute
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -157,70 +110,19 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column - API Display Container */}
-            <div className="animate-in fade-in slide-in-from-right-8 duration-1000">
-              <div className="relative">
+            {/* Right Column - TradingView Ticker */}
+            <div className="animate-in fade-in slide-in-from-right-8 duration-1000 h-full flex items-center">
+              <div className="relative w-full">
                 {/* Glass card container */}
-                <div className="bg-card/40 border border-primary/30 rounded-2xl p-8 backdrop-blur-xl shadow-2xl">
-                  <div className="space-y-6">
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-xl font-bold">Live Market Data</h2>
-                      <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
-                    </div>
-
-                    {/* Market ticker */}
-                    <div className="space-y-3">
-                      {loading ? (
-                        <div className="space-y-3">
-                          {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="h-12 bg-muted/20 rounded-lg animate-pulse" />
-                          ))}
-                        </div>
-                      ) : (
-                        cryptoData.slice(0, 4).map((coin) => (
-                          <div
-                            key={coin.symbol}
-                            className="flex items-center justify-between p-3 rounded-lg bg-background/50 hover:bg-background/80 transition-colors group cursor-pointer"
-                          >
-                            <div className="flex-1">
-                              <div className="font-semibold text-sm">{coin.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                #{coin.market_cap_rank}
-                              </div>
-                            </div>
-
-                            <div className="text-right">
-                              <div className="font-bold text-sm">
-                                ${coin.current_price.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                              </div>
-                              <div
-                                className={`text-xs font-semibold ${
-                                  coin.price_change_percentage_24h >= 0
-                                    ? 'text-chart-2'
-                                    : 'text-chart-4'
-                                }`}
-                              >
-                                {coin.price_change_percentage_24h >= 0 ? '+' : ''}
-                                {coin.price_change_percentage_24h.toFixed(2)}%
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-
-                    {/* Footer button */}
-                    <Link
-                      href="/markets"
-                      className="block text-center py-3 rounded-lg bg-primary/20 text-primary font-semibold hover:bg-primary/30 transition-colors text-sm"
-                    >
-                      View All Markets
-                    </Link>
+                <div className="bg-card/40 border border-primary/30 rounded-2xl overflow-hidden backdrop-blur-xl shadow-2xl">
+                  <div className="p-6 border-b border-border/50 flex items-center justify-between">
+                    <h2 className="text-lg font-bold">Live Market Ticker</h2>
+                    <div className="w-3 h-3 bg-primary rounded-full animate-pulse" />
                   </div>
-
-                  {/* Decorative glow */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 rounded-2xl pointer-events-none" />
+                  
+                  <div className="p-6">
+                    <TradingViewTicker />
+                  </div>
                 </div>
 
                 {/* Floating accent */}
